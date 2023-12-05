@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPT Prompt Test</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>GPT Prompt Test</h1>
+    <form id="promptForm">
+        <label for="locationInput">여행지 위치:</label><br>
+        <input type="text" id="locationInput" name="locationInput" placeholder="예: 제주도"><br>
+
+        <label for="daysInput">일정 길이 (일수):</label><br>
+        <input type="number" id="daysInput" name="daysInput" min="1" placeholder="예: 2"><br>
+
+        <input type="submit" value="일정 요청">
+    </form>
+    <h2>여행 일정:</h2>
+    <div id="planResponse"></div>
+
+    <script>
+        $(document).ready(function() {
+            $("#promptForm").submit(function(e) {
+                e.preventDefault();
+                var location = $("#locationInput").val();
+                var days = parseInt($("#daysInput").val(), 10); // 10진수로 정수 변환
+
+
+                $.ajax({
+                    url: '/gpt-prompt/',
+                    type: 'GET',
+                    data: { 'location': location, 'days': days },
+                    success: function(response) {
+                        var parsedResponse = parseSchedule(response.response);
+                        $("#planResponse").html(parsedResponse);
+                    },
+                    error: function(xhr, status, error) {
+                        var errorMessage = xhr.status + ': ' + xhr.statusText;
+                        $("#planResponse").text('Error - ' + errorMessage);
+                    }
+                });
+            });
+        });
+
+        function parseSchedule(text) {
+            var days = text.split('Day');
+            var parsedResult = '';
+
+            days.forEach(function(day) {
+                if (day.trim() !== '') {
+                    var dayNumber = day.match(/\d+/)[0];
+                    parsedResult += '<strong>Day ' + dayNumber + ':</strong><br>';
+
+                    var parts = ['오전', '점심', '오후', '저녁', '숙박'];
+                    parts.forEach(function(part) {
+                        var regex = new RegExp(part + ': ([^\\n]+)', 'g');
+                        var match = regex.exec(day);
+                        if (match) {
+                            parsedResult += '<strong>' + part + ':</strong> ' + match[1] + '<br>';
+                        }
+                    });
+
+                    parsedResult += '<br>';
+                }
+            });
+
+            return parsedResult;
+        }
+    </script>
+</body>
+</html>
