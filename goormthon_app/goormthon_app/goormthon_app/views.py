@@ -35,9 +35,9 @@ class GPTPromptView(View):
         # 프롬프트 구성
         prompt = f"{location} 지역에 대한 {days}일간의 아이와 함께하는 여행지를 제안해주세요.\n"
         for spot in tourist_spots:
-            prompt += f"- {spot.title} (주소: {spot.address}, 태그: {spot.tag})\n"
+            prompt += f"- {spot.name} (주소: {spot.address}, 태그: {spot.tag})\n"
 
-        prompt += "\n여행 일정은 아래 형식에 맞춰서 제공해주세요.  장소와 식당, 숙박시설만 알려주세요.\n"
+        prompt += "\n여행 일정은 아래 형식에 맞춰서 제공해주세요.  장소와 식당, 숙박시설의 이름만 알려주세요.\n"
         for day in range(1, days + 1):
             prompt += (
                 f"Day {day}:\n\n"
@@ -50,18 +50,20 @@ class GPTPromptView(View):
 
         try:
             response = openai.ChatCompletion.create(
-                model="gpt-3.5-turbo",
+                model="gpt-4-vision-preview",
                 messages=[{"role": "system", "content": "You are a helpful assistant."},
                           {"role": "user", "content": prompt}],
-               # max_tokens=1000,  # 튜닝: 결과 길이 제한
+                max_tokens=4000,  # 튜닝: 결과 길이 제한
                # temperature=0,  # 튜닝: 창의성 및 예측 가능성 조절
                # top_p=1,  # 튜닝: 상위 확률 분포 고려
                # frequency_penalty=1,  # 튜닝: 반복 감소
                # presence_penalty=0  # 튜닝: 독창성 증가
             )
-           
             print(JsonResponse({'response': response['choices'][0]['message']['content']}))
             return JsonResponse({'response': response['choices'][0]['message']['content']})
+       
+           
+
         except Exception as e:
             logger.error(f"Error in GPTPromptView: {str(e)}")
             print(JsonResponse({'response': response['choices'][0]['message']['content']}))
