@@ -6,5 +6,5 @@ from .models import JejuTouristSpot
 class JejuTouristSpotSerializer(serializers.ModelSerializer):
     class Meta:
         model = JejuTouristSpot
-        fields = ('name', 'lat', 'lon', 'url', 'phone_number', 'address')
+        fields = ('name', 'lat', 'lon', 'url', 'phone_number', 'address', 'introduction')
 
