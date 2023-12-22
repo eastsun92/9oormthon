@@ -50,10 +50,10 @@ class GPTPromptView(View):
 
         try:
             response = openai.ChatCompletion.create(
-                model="gpt-4-vision-preview",
+                model="gpt-4-1106-preview",
                 messages=[{"role": "system", "content": "You are a helpful assistant. that You help me plan my trip to Jeju Island"},
                           {"role": "user", "content": prompt}],
-                max_tokens=4000,  # 튜닝: 결과 길이 제한
+               # max_tokens=128,000,  # 튜닝: 결과 길이 제한
                # temperature=0,  # 튜닝: 창의성 및 예측 가능성 조절
                # top_p=1,  # 튜닝: 상위 확률 분포 고려
                # frequency_penalty=1,  # 튜닝: 반복 감소
