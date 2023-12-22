@@ -11,7 +11,7 @@ class JejuTouristSpot(models.Model):
     lon = models.FloatField(null=True)
     postcode = models.CharField(max_length=20, null=True)
     phone_number = models.CharField(max_length=50, null=True)
-    url = models.CharField(max_length=255, null=True)
+    url = models.CharField(max_length=45000, null=True)
     image_description = models.CharField(max_length=255, null=True)
     all_tag = models.TextField(null=True)
 
