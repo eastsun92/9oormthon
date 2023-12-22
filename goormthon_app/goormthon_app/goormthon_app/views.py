@@ -1,12 +1,7 @@
 import openai
 from django.http import JsonResponse
 from django.views import View
-from django.conf import settings
-
-
-import requests
 from .models import JejuTouristSpot
-
 import logging
 
 logger = logging.getLogger(__name__)
